@@ -1,0 +1,45 @@
+{
+  "variables": {
+    "iso" : "/multimedia/julien/OS/debian-7.5.0-amd64-DVD-1.iso"
+  },
+  "builders": [{
+      "name" : "debian-kvm",
+      "iso_url": "{{user `iso`}}",
+      "iso_checksum_type" : "none",
+      "ssh_username" : "root",
+      "ssh_password": "packer",
+      "ssh_wait_timeout": "1800s",
+      "disk_size": 20000,
+      "boot_command": [
+        "<esc><esc><enter><wait>",
+        "<tab> install auto=true priority=critical preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<enter><wait>"
+      ],
+      "http_directory": "http",
+      "shutdown_command": "shutdown -P -h now",
+      "type": "vmware-iso",
+      "vmx_data": {
+        "memsize": "4096",
+        "numvcpus": "2",
+        "cpuid.coresPerSocket": "2",
+        "vhv.enable" : "TRUE"
+      },
+      "tools_upload_flavor": "linux",
+      "guest_os_type": "debian7-64"}
+  ],
+  "provisioners": [{
+    "type": "file",
+    "source": "file/sources.list",
+    "destination": "/etc/apt/sources.list"
+   },{
+    "type": "shell",
+    "inline": [
+      "sleep 30",
+      "apt-get update",
+      "apt-get install -y qemu-kvm libvirt-bin virtinst virt-top bridge-utils netcat-openbsd",
+      "apt-get install -y python-pip libc6-dev gcc python-dev",
+      "pip install ansible"]
+   },{
+    "type": "ansible-local",
+    "playbook_file": "scripts/vmwaretools/install.yml"
+   }]
+}

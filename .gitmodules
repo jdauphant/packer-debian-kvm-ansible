@@ -1,0 +1,3 @@
+[submodule "scripts/vmwaretools"]
+	path = scripts/vmwaretools
+	url = git@github.com:jdauphant/ansible-playbook-vmwaretools.git
