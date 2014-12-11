@@ -18,7 +18,7 @@
       "shutdown_command": "shutdown -P -h now",
       "type": "vmware-iso",
       "vmx_data": {
-        "memsize": "4096",
+        "memsize": "3072",
         "numvcpus": "2",
         "cpuid.coresPerSocket": "2",
         "vhv.enable" : "TRUE"
